@@ -1,0 +1,97 @@
+import sys, getopt
+import sys
+import networkx as nx
+import math
+def main():
+    # 这里写主函数的逻辑
+    commu1 = {}
+    commu2 = {}
+    input_file_path = './data/expriment.txt'
+    count = 1
+    set1 = set()
+    with open(input_file_path, 'r') as input_file:
+        for line in input_file:
+            commu1[count] = []
+            commu2[count] = []
+            for str1 in line.split(','):
+                str_temp = str1.strip()
+                number = int(str_temp)
+                commu1[count].append(number)
+                commu2[count].append(number)
+                set1.add(number)
+            count += 1
+    # target_key = 2
+    # #
+    # element_to_remove = 0
+    #
+    # if target_key in commu2 and element_to_remove in commu2[target_key]:
+    #     commu2[target_key].remove(element_to_remove)
+    print(commu1)
+    len1 = len(commu1)
+    print(commu2)
+    len2 = len(commu2)
+    print(set1)
+    set_len = len(set1)
+    print(len1,len2,set_len)
+    #计算nmi值
+    i1 = 1
+    N = set_len
+    fz = 0.0
+    while i1 <= len1 :
+        j1 = 1
+        while j1 <= len2 :
+            N_ij = 0
+            N_i = 0
+            N_j = 0
+            for values1 in commu1.values():
+                for value1 in values1:
+                    for values2 in commu2.values():
+                        for value2 in values2:
+                            if value2 == value1 :
+                                N_ij += 1
+            vv1 = commu1.get(i1)
+            if vv1 is not None and isinstance(vv1,(list,tuple)):
+                N_i = len(vv1)
+            vv2 = commu2.get(j1)
+            if vv1 is not None and isinstance(vv1, (list, tuple)):
+                N_j = len(vv2)
+            sum = (N_ij * N)/(N_i * N_j)
+            fz += math.log(sum)
+            j1 += 1
+        i1 += 1
+    sm = -2 * fz
+
+
+    qm = 0.0
+    hm = 0.0
+    i2 = 1
+    while i2 <= len1:
+        N_i2 = 0
+        vv2 = commu1.get(i2)
+        if vv2 is not None and isinstance(vv2, (list, tuple)):
+            N_i2 = len(vv2)
+        sum2 = N_i2/N
+        t_t1 = math.log(sum2)
+        qm += (N_i2 * t_t1)
+        i2 += 1
+    j2 = 1
+    while j2 <= len2 :
+        N_j2 =0
+        vv3 = commu2.get(j2)
+        if vv3 is not None and isinstance(vv3, (list, tuple)):
+            N_j2 = len(vv3)
+        sum2 = N_j2 / N
+        t_t2 = math.log(sum2)
+        hm += (N_j2 * t_t2)
+        j2 += 1
+    fm = qm + hm
+    nmi = sm/fm
+    print("NMI值为：",nmi)
+
+
+
+
+
+# 判断是否执行主函数
+if __name__ == "__main__":
+    main()
